@@ -30,8 +30,20 @@ const globalForPrisma = globalThis as unknown as {
   prisma?: ReturnType<typeof createClient>
 }
 
-export const prisma = globalForPrisma.prisma ?? createClient()
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForPrisma.prisma = prisma
+function getClient() {
+  if (!globalForPrisma.prisma) globalForPrisma.prisma = createClient()
+  return globalForPrisma.prisma
 }
+
+/**
+ * Created on first use, not at import — same reason as src/lib/env.ts: a
+ * module-scope throw fails `next build` while collecting page data on a
+ * machine without credentials, even though no query runs at build time.
+ */
+export const prisma = new Proxy({} as ReturnType<typeof createClient>, {
+  get(_target, prop) {
+    const client = getClient()
+    const value = Reflect.get(client, prop, client)
+    return typeof value === 'function' ? value.bind(client) : value
+  },
+})

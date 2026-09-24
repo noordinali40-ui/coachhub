@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { config as loadEnv } from 'dotenv'
-import { defineConfig, env } from 'prisma/config'
+import { defineConfig } from 'prisma/config'
 
 // Next.js reads .env.local, so Prisma must too — otherwise `prisma migrate`
 // and `next dev` end up pointed at different databases.
@@ -18,6 +18,11 @@ export default defineConfig({
     // DDL do not survive pgBouncer's transaction pooling. The running app uses
     // the pooled DATABASE_URL instead, through the driver adapter in
     // src/lib/prisma.ts.
-    url: process.env.DIRECT_URL ? env('DIRECT_URL') : env('DATABASE_URL'),
+    //
+    // Read process.env directly rather than via Prisma's env(), which throws
+    // when the variable is unset. `prisma generate` runs on `npm install`
+    // (postinstall) and needs no database, so CI/Vercel installs must not fail
+    // just because no URL is configured at install time.
+    url: process.env.DIRECT_URL || process.env.DATABASE_URL,
   },
 })
