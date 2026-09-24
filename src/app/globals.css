@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+/*
+  CoachHub Africa design tokens.
+
+  Warm and energetic rather than clinical: sunset clay as the action colour,
+  savanna green for progress and success, harvest gold for streaks and
+  achievement. Neutrals are warm sand instead of cool grey so the product does
+  not read as a hospital or a banking app.
+*/
+
+@theme {
+  /* Brand */
+  --color-clay-50: oklch(0.971 0.017 40);
+  --color-clay-100: oklch(0.94 0.037 39);
+  --color-clay-200: oklch(0.885 0.072 38);
+  --color-clay-300: oklch(0.812 0.111 37);
+  --color-clay-400: oklch(0.723 0.153 36);
+  --color-clay-500: oklch(0.645 0.18 34);
+  --color-clay-600: oklch(0.565 0.175 32);
+  --color-clay-700: oklch(0.47 0.146 31);
+  --color-clay-800: oklch(0.39 0.113 31);
+  --color-clay-900: oklch(0.327 0.088 32);
+
+  /* Savanna green — progress, completion, success */
+  --color-savanna-50: oklch(0.966 0.024 165);
+  --color-savanna-100: oklch(0.925 0.05 165);
+  --color-savanna-300: oklch(0.79 0.108 164);
+  --color-savanna-500: oklch(0.6 0.115 164);
+  --color-savanna-600: oklch(0.517 0.1 165);
+  --color-savanna-700: oklch(0.432 0.083 166);
+  --color-savanna-900: oklch(0.29 0.055 167);
+
+  /* Harvest gold — streaks, achievement, leaderboards */
+  --color-harvest-100: oklch(0.951 0.056 85);
+  --color-harvest-300: oklch(0.858 0.124 82);
+  --color-harvest-500: oklch(0.775 0.146 76);
+  --color-harvest-700: oklch(0.6 0.121 65);
+
+  /* Warm neutrals */
+  --color-sand-50: oklch(0.988 0.004 75);
+  --color-sand-100: oklch(0.971 0.008 75);
+  --color-sand-200: oklch(0.936 0.012 75);
+  --color-sand-300: oklch(0.885 0.015 72);
+  --color-sand-400: oklch(0.76 0.018 68);
+  --color-sand-500: oklch(0.63 0.019 63);
+  --color-sand-600: oklch(0.51 0.019 55);
+  --color-sand-700: oklch(0.405 0.018 50);
+  --color-sand-800: oklch(0.29 0.016 48);
+  --color-sand-900: oklch(0.216 0.014 46);
+  --color-sand-950: oklch(0.155 0.012 45);
+
+  /* Semantic aliases, remapped under .dark below */
+  --color-background: var(--color-sand-50);
+  --color-surface: #ffffff;
+  --color-surface-muted: var(--color-sand-100);
+  --color-border-subtle: var(--color-sand-200);
+  --color-ink: var(--color-sand-900);
+  --color-ink-muted: var(--color-sand-600);
+  --color-brand: var(--color-clay-500);
+  --color-brand-strong: var(--color-clay-600);
+  --color-brand-soft: var(--color-clay-50);
+
+  --radius-card: 1.25rem;
+  --radius-control: 0.75rem;
+
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-card: 0 1px 2px oklch(0.29 0.016 48 / 0.05), 0 8px 24px -12px oklch(0.29 0.016 48 / 0.18);
+  --shadow-lift: 0 2px 4px oklch(0.29 0.016 48 / 0.06), 0 16px 40px -16px oklch(0.29 0.016 48 / 0.28);
+}
+
+/*
+  Dark mode is class-driven (`.dark` on <html>) rather than
+  `prefers-color-scheme`, so the user's explicit choice wins.
+*/
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-background: var(--color-sand-950);
+  --color-surface: var(--color-sand-900);
+  --color-surface-muted: var(--color-sand-800);
+  --color-border-subtle: var(--color-sand-800);
+  --color-ink: var(--color-sand-100);
+  --color-ink-muted: var(--color-sand-400);
+  --color-brand: var(--color-clay-400);
+  --color-brand-strong: var(--color-clay-300);
+  --color-brand-soft: var(--color-sand-800);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border-subtle);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    /* Mobile-first: the bottom tab bar is fixed, so keep content clear of it. */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Visible focus for keyboard users without a permanent outline for mouse users. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Horizontal category rails: scrollable without a visible scrollbar. */
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
